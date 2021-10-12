@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "name": "Video & Audio Blocker",
+  "description": "Block video & audio per website",
+  "browser_action": {
+    "browser_style": true,
+    "default_popup": "ui/pages/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_start",
+      "js": [
+        "shared/shared_1.js",
+        "content/content_1.js"
+      ]
+    }
+  ],
+  "background": {
+    "persistent": true,
+    "page": "background/bg.html"
+  },
+  "web_accessible_resources": [
+    "ui/pages/options_tab.html"
+  ],
+  "permissions": [
+    "<all_urls>",
+    "tabs",
+    "storage",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "icons": {
+    "16": "ui/icons/16.png",
+    "32": "ui/icons/32.png",
+    "48": "ui/icons/48.png",
+    "96": "ui/icons/96.png",
+    "128": "ui/icons/128.png"
+  }
+}
