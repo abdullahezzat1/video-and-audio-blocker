@@ -1,5 +1,5 @@
-options_tab = browser.runtime.getURL("/ui/pages/options_tab.html");
-document.getElementById("options").href = options_tab;
+// options_tab = browser.runtime.getURL("/ui/pages/options_tab.html");
+// document.getElementById("options").href = options_tab;
 
 
 async function getActiveTabUrl() {
@@ -17,7 +17,7 @@ async function main() {
   let tabUrl = await getActiveTabUrl();
   let siteMode = await browser.storage.local.get(tabUrl.hostname);
   siteMode = siteMode[tabUrl.hostname];
-  //set UI data
+  //load UI
   document.querySelector(`input[name="default"][value="${defaultMode}"]`).checked = true;
   if (siteMode === undefined) {
     document.querySelector(`input[name="website"][value="0"]`).checked = true;
@@ -26,11 +26,22 @@ async function main() {
   }
 
   //watch UI for changes
-  document.querySelector(`input[name="default"][value="${MODES.ALLOW_AUDIO_AND_VIDEO}"]`)
-    .addEventListener('')
+  document.getElementById('default').addEventListener('change', function (e) {
+    browser.storage.local.set({
+      defaultMode: parseInt(e.target.value)
+    });
+  });
 
-  //update settings
-
+  document.getElementById('website').addEventListener('change', function (e) {
+    let value = parseInt(e.target.value);
+    if (value === 0) {
+      browser.storage.local.remove(tabUrl.hostname);
+    } else {
+      browser.storage.local.set({
+        [tabUrl.hostname]: value
+      });
+    }
+  });
 }
 
 

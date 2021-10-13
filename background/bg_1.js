@@ -1,12 +1,6 @@
-// browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-//   if (message.required === "tabUrl") {
-//     sendResponse({ tabUrl: getActiveTabUrl() });
-//   }
-// });
-
 browser.runtime.onInstalled.addListener(async function () {
   await browser.storage.local.set({
-    defaultMode: MODES.BLOCK_AUDIO_AND_VIDEO
+    defaultMode: MODES.ALLOW_AUDIO_AND_VIDEO
   });
 })
 

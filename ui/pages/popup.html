@@ -10,43 +10,67 @@
       cursor: pointer;
     }
 
+    .vertical {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      padding: .5rem 1rem;
+    }
+
+    .space {
+      padding: .2rem 0;
+      margin-bottom: .2rem;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
   </style>
 </head>
 
 <body class="popup">
-  <h4>Default Mode:</h4>
-  <label>
-    Allow Video & Audio
-    <input name="default" type="radio" value="1">
-  </label>
-  <label>
-    Block Video & Audio
-    <input name="default" type="radio" value="2">
-  </label>
-  <label>
-    Block Video Only
-    <input name="default" type="radio" value="3">
-  </label>
-  <h4>For This Website:</h4>
-  <label>
-    Use Default Mode
-    <input name="website" type="radio" value="0">
-  </label>
-  <label>
-    Allow Video & Audio
-    <input name="website" type="radio" value="1">
-  </label>
-  <label>
-    Block Video & Audio
-    <input name="website" type="radio" value="2">
-  </label>
-  <label>
-    Block Video Only
-    <input name="website" type="radio" value="3">
-  </label>
-
-  <br>
-  <a id="options" target="_blank">Options</a>
+  <div class="container">
+    <h4>Default Mode (All Websites):</h4>
+    <div id="default" class="vertical">
+      <label class="space">
+        <input name="default" type="radio" value="1">
+        Allow Video & Audio
+      </label>
+      <label class="space">
+        <input name="default" type="radio" value="2">
+        Block Video & Audio
+      </label>
+      <label class="space">
+        <input name="default" type="radio" value="3">
+        Block Video Only
+      </label>
+    </div>
+    <h4>For This Website:</h4>
+    <div id="website" class="vertical">
+      <label class="space">
+        <input name="website" type="radio" value="0">
+        Use Default Mode
+      </label>
+      <label class="space">
+        <input name="website" type="radio" value="1">
+        Allow Video & Audio
+      </label>
+      <label class="space">
+        <input name="website" type="radio" value="2">
+        Block Video & Audio
+      </label>
+      <label class="space">
+        <input name="website" type="radio" value="3">
+        Block Video Only
+      </label>
+    </div>
+    <p class="bold">Reload the page to apply changes.</p>
+    <!-- <br> -->
+    <!-- <a id="options" target="_blank">Options</a> -->
+  </div>
   <script src="/shared/shared_1.js"></script>
   <script src="/ui/js/popup_1.js"></script>
 </body>
