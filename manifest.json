@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "version": "1.0.0",
   "name": "Video & Audio Blocker",
-  "description": "Block video & audio per website",
+  "description": "Block video and audio from downloading globally and selectively.",
   "browser_action": {
     "browser_style": true,
     "default_popup": "ui/pages/popup.html"

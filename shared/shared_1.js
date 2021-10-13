@@ -5,3 +5,10 @@ const MODES = {
   BLOCK_AUDIO_AND_VIDEO: 2,
   BLOCK_VIDEO_ONLY: 3
 };
+
+
+let storage = {};
+
+async function updateMemoryStorage() {
+  storage = await browser.storage.local.get();
+}

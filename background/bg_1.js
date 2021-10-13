@@ -5,21 +5,25 @@ browser.runtime.onInstalled.addListener(async function () {
 })
 
 
+updateMemoryStorage();
 
-async function getCurrentMode(hostname) {
-  let hostnameMode = await browser.storage.local.get(hostname);
-  hostnameMode = hostnameMode[hostname];
+browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  updateMemoryStorage();
+})
+
+
+function getCurrentMode(hostname) {
+  let hostnameMode = storage[hostname];
   if (hostnameMode !== undefined) {
     return hostnameMode;
   }
-  let defaultMode = await browser.storage.local.get("defaultMode");
-  defaultMode = defaultMode.defaultMode;
+  let defaultMode = storage.defaultMode;
   return defaultMode;
 }
 
 
 
-browser.webRequest.onHeadersReceived.addListener(async function (details) {
+browser.webRequest.onHeadersReceived.addListener(function (details) {
   for (const header of details.responseHeaders) {
     if (header.name.toLowerCase() === 'content-type') {
       let type = header.value;
@@ -31,7 +35,7 @@ browser.webRequest.onHeadersReceived.addListener(async function (details) {
       //at this point, the request IS a target
       let url = details?.frameAncestors[0]?.url ?? details.originUrl ?? details.url;
       url = new URL(url);
-      let currentMode = await getCurrentMode(url.hostname);
+      let currentMode = getCurrentMode(url.hostname);
       if (currentMode === MODES.ALLOW_AUDIO_AND_VIDEO) {
         return;
       }

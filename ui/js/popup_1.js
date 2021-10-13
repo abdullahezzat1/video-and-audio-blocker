@@ -1,7 +1,6 @@
 // options_tab = browser.runtime.getURL("/ui/pages/options_tab.html");
 // document.getElementById("options").href = options_tab;
 
-
 async function getActiveTabUrl() {
   let url = null;
   await browser.tabs.query({ active: true, currentWindow: true })
@@ -11,12 +10,11 @@ async function getActiveTabUrl() {
 
 
 async function main() {
+  await updateMemoryStorage();
   //get UI data
-  let defaultMode = await browser.storage.local.get("defaultMode");
-  defaultMode = defaultMode.defaultMode;
+  let defaultMode = storage.defaultMode;
   let tabUrl = await getActiveTabUrl();
-  let siteMode = await browser.storage.local.get(tabUrl.hostname);
-  siteMode = siteMode[tabUrl.hostname];
+  let siteMode = storage[tabUrl.hostname];
   //load UI
   document.querySelector(`input[name="default"][value="${defaultMode}"]`).checked = true;
   if (siteMode === undefined) {
@@ -30,6 +28,8 @@ async function main() {
     browser.storage.local.set({
       defaultMode: parseInt(e.target.value)
     });
+    updateMemoryStorage();
+    browser.runtime.sendMessage({ update: true });
   });
 
   document.getElementById('website').addEventListener('change', function (e) {
@@ -41,6 +41,8 @@ async function main() {
         [tabUrl.hostname]: value
       });
     }
+    updateMemoryStorage();
+    browser.runtime.sendMessage({ update: true });
   });
 }
 
