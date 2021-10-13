@@ -4,11 +4,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/ui/css/style.css">
+  <!-- <link rel="stylesheet" href="/ui/css/style.css"> -->
+  <style>
+    label {
+      cursor: pointer;
+    }
+
+  </style>
 </head>
 
 <body class="popup">
-  <h3>This is a Popup!!</h3>
+  <h4>Default Mode:</h4>
+  <label>
+    Allow Video & Audio
+    <input name="default" type="radio" value="1">
+  </label>
+  <label>
+    Block Video & Audio
+    <input name="default" type="radio" value="2">
+  </label>
+  <label>
+    Block Video Only
+    <input name="default" type="radio" value="3">
+  </label>
+  <h4>For This Website:</h4>
+  <label>
+    Use Default Mode
+    <input name="website" type="radio" value="0">
+  </label>
+  <label>
+    Allow Video & Audio
+    <input name="website" type="radio" value="1">
+  </label>
+  <label>
+    Block Video & Audio
+    <input name="website" type="radio" value="2">
+  </label>
+  <label>
+    Block Video Only
+    <input name="website" type="radio" value="3">
+  </label>
+
   <br>
   <a id="options" target="_blank">Options</a>
   <script src="/shared/shared_1.js"></script>

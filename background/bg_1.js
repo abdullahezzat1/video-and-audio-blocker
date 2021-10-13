@@ -1,67 +1,66 @@
-function shouldBeBlocked(hostname, blockByDefault, oppositeSet) {
-  console.log(hostname);
-  if (blockByDefault) {
-    if (oppositeSet.has(hostname)) {
-      return false;
-    } else {
-      return true;
-    }
-  } else {
-    if (oppositeSet.has(hostname)) {
-      return true;
-    } else {
-      return false;
+// browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+//   if (message.required === "tabUrl") {
+//     sendResponse({ tabUrl: getActiveTabUrl() });
+//   }
+// });
+
+browser.runtime.onInstalled.addListener(async function () {
+  await browser.storage.local.set({
+    defaultMode: MODES.BLOCK_AUDIO_AND_VIDEO
+  });
+})
+
+
+
+async function getCurrentMode(hostname) {
+  let hostnameMode = await browser.storage.local.get(hostname);
+  hostnameMode = hostnameMode[hostname];
+  if (hostnameMode !== undefined) {
+    return hostnameMode;
+  }
+  let defaultMode = await browser.storage.local.get("defaultMode");
+  defaultMode = defaultMode.defaultMode;
+  return defaultMode;
+}
+
+
+
+browser.webRequest.onHeadersReceived.addListener(async function (details) {
+  for (const header of details.responseHeaders) {
+    if (header.name.toLowerCase() === 'content-type') {
+      let type = header.value;
+      let videoMatch = type.search(/video/i) >= 0;
+      let audioMatch = type.search(/audio/i) >= 0;
+      if (!videoMatch && !audioMatch) {
+        return;
+      }
+      //at this point, the request IS a target
+      let url = details?.frameAncestors[0]?.url ?? details.originUrl ?? details.url;
+      url = new URL(url);
+      let currentMode = await getCurrentMode(url.hostname);
+      if (currentMode === MODES.ALLOW_AUDIO_AND_VIDEO) {
+        return;
+      }
+      //mode: block...something!
+      //so, video is blocked regardless
+      if (videoMatch) {
+        return {
+          cancel: true
+        };
+      }
+      //audio match
+      if (currentMode === MODES.BLOCK_VIDEO_ONLY) {
+        return;
+      }
+      //audio match & mode: block audio and video
+      return {
+        cancel: true
+      };
     }
   }
-}
-
-
-async function main() {
-  await browser.storage.local.set({
-    blockByDefault: true,
-    whiteList: [
-      'www.beinsports.com',
-      'classroom.udacity.com'
-    ],
-    blackList: [],
-  });
-
-  let storage = await browser.storage.local.get();
-  storage.whiteList = new Set(storage.whiteList);
-  storage.blackList = new Set(storage.blackList);
-
-  browser.webRequest.onHeadersReceived.addListener(function (details) {
-    for (const header of details.responseHeaders) {
-      if (header.name.toLowerCase() === 'content-type') {
-        let type = header.value;
-        let url = '';
-        let oppositeSet = null;
-        let blockByDefault = true;
-        if (type.search(/video/i) >= 0 || type.search(/audio/i) >= 0) {
-          url = details?.frameAncestors[0]?.url ?? details.originUrl;
-          url = new URL(url);
-          blockByDefault = storage.blockByDefault;
-          oppositeSet = blockByDefault === true ? storage.whiteList : storage.blackList;
-        } else {
-          return;
-        }
-        if (shouldBeBlocked(url.hostname, blockByDefault, oppositeSet)) {
-          return {
-            cancel: true
-          };
-        } else {
-          return;
-        }
-      }
-    }
+},
+  {
+    urls: ["<all_urls>"]
   },
-    {
-      urls: ["<all_urls>"]
-    },
-    ["blocking", "responseHeaders"]
-  );
-
-}
-
-
-main();
+  ["blocking", "responseHeaders"]
+);

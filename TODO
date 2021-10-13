@@ -1,8 +1,10 @@
-default mode:
-  ☐ block or allow video
-  ☐ block or allow audio
+✔ background
 
 
-☐ custom sites settings (object per site)
+popup:
+  ✔ UI style and flow
+  ☐ UI logic
 
-☐ clear custom sites list
+options:
+  ☐ UI style and flow
+  ☐ UI logic
