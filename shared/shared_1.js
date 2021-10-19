@@ -1,5 +1,5 @@
 // cross-platform client: Chrome, Firefox, and Edge
-// var client = typeof chrome === "undefined" ? browser : chrome;
+var client = typeof chrome === "undefined" ? browser : chrome;
 const MODES = {
   ALLOW_AUDIO_AND_VIDEO: 1,
   BLOCK_AUDIO_AND_VIDEO: 2,
@@ -9,6 +9,8 @@ const MODES = {
 
 let storage = {};
 
-async function updateMemoryStorage() {
-  storage = await browser.storage.local.get();
+function updateMemoryStorage() {
+  client.storage.local.get(function (result) {
+    storage = result;
+  });
 }
